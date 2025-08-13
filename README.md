@@ -1,4 +1,4 @@
-#SaveFood 🥗
+SaveFood 🥗
 
 Intelligent Food Waste Prevention System
 
