@@ -1,6 +1,6 @@
-SaveFood 🥗
+# SaveFood 🥗
 
-Intelligent Food Waste Prevention System
+An Intelligent Food Waste Prevention System
 
 Overview
 
