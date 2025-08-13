@@ -18,8 +18,8 @@ Provides recipe suggestions to use ingredients before they spoil.
 
 
 Datasets Used
-	•	Food-101 — Images of 101 food categories used to train the recognition model.
-	•	Open Food Facts — Metadata on packaging, expiry, and nutritional information.
+	•	Food-101 - Images of 101 food categories used to train the recognition model.
+	•	Open Food Facts - Metadata on packaging, expiry, and nutritional information.
 
 
 Tech Stack
