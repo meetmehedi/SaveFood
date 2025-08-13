@@ -9,10 +9,16 @@ SavePlate is a machine learning-powered smart system designed to help individual
 Features
 	•	AI-Powered Food Tracking
 Automatically identifies stored food and monitors its freshness.
+
+
 	•	Spoilage Prediction
 Alerts users before food goes bad using trained ML models.
+
+
 	•	Waste Analytics Dashboard
 Visualizes how much food and money you’ve saved over time.
+
+
 	•	Personalized Suggestions
 Provides recipe suggestions to use ingredients before they spoil.
 
