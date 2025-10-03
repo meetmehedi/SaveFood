@@ -4,7 +4,7 @@ An Intelligent Food Waste Prevention System
 
 Overview
 
-SavePlate is a machine learning-powered smart system designed to help individuals and businesses reduce food waste. Globally, one-third of all food is wasted every year - a problem that has economic, social, and environmental consequences. SavePlate helps track, predict, and manage food to reduce waste and make consumption more sustainable.
+Save Food is a machine learning-powered smart system designed to help individuals and businesses reduce food waste. Globally, one-third of all food is wasted every year - a problem that has economic, social, and environmental consequences. SavePlate helps track, predict, and manage food to reduce waste and make consumption more sustainable.
 
 Features
 	• AI-Powered Food Tracking
