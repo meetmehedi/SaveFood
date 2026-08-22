@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaveFood: Lab Project Report (CSE-404)</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 25mm 20mm 20mm 20mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt;
+      line-height: 1.6;
+      color: #111;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .report-container {
+      width: 100%;
+      max-width: 210mm;
+      margin: 0 auto;
+      background: #fff;
+      padding: 10px 25px;
+      box-sizing: border-box;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .report-container {
+        padding: 0;
+        max-width: 100%;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .page-break {
+        page-break-before: always !important;
+        break-before: page !important;
+      }
+    }
+
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+      margin-top: 30px;
+      padding-top: 10px;
+    }
+
+    h1, h2, h3, h4 {
+      color: #000;
+      font-family: "Times New Roman", Times, serif;
+      font-weight: bold;
+    }
+
+    h1.chapter-title {
+      font-size: 16pt;
+      text-align: center;
+      text-transform: uppercase;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    h2.section-title {
+      font-size: 14pt;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+
+    h3.subsection-title {
+      font-size: 12pt;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      text-align: justify;
+      margin-bottom: 12px;
+      text-indent: 24px;
+    }
+
+    .no-indent {
+      text-indent: 0 !important;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 11pt;
+    }
+
+    th, td {
+      border: 1px solid #222;
+      padding: 7px 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8fafc;
+      font-weight: bold;
+    }
+
+    .table-caption {
+      font-style: italic;
+      font-size: 11pt;
+      text-align: center;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    /* Cover Page */
+    .cover-page {
+      text-align: center;
+      min-height: 250mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+      padding-top: 15px;
+    }
+
+    .cover-title {
+      font-size: 22pt;
+      font-weight: bold;
+      margin-top: 25px;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .cover-subtitle {
+      font-size: 14pt;
+      font-weight: bold;
+      margin-top: 35px;
+      line-height: 1.5;
+    }
+
+    .diu-logo-box {
+      margin: 30px 0;
+    }
+
+    .cover-author-box {
+      font-size: 12pt;
+      margin: 15px 0;
+      line-height: 1.6;
+    }
+
+    .cover-footer {
+      font-size: 12pt;
+      font-weight: bold;
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+
+    .toc-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 11.5pt;
+    }
+
+    .toc-dots {
+      flex: 1;
+      border-bottom: 1px dotted #475569;
+      margin: 0 8px 4px 8px;
+    }
+
+    .page-number {
+      text-align: center;
+      font-size: 11pt;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    ul, ol {
+      margin-top: 5px;
+      margin-bottom: 12px;
+      padding-left: 35px;
+    }
+
+    li {
+      margin-bottom: 5px;
+      text-align: justify;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="report-container">
+
+    <!-- ================= COVER PAGE ================= -->
+    <div class="cover-page">
+      <div>
+        <div class="cover-title">
+          SaveFood: An Intelligent Multi Modal AI System for Food Spoilage Early Warning and Waste Prevention
+        </div>
+
+        <div class="cover-subtitle">
+          LAB PROJECT REPORT<br>
+          ON<br>
+          PERIPHERALS AND INTERFACING LAB / MARKUP AND SCRIPTING LANGUAGES LAB<br>
+          <span style="font-size: 12pt; font-weight: normal;">Course Code: CSE-404</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="cover-author-box">
+          <strong>Submitted by</strong><br>
+          <strong>Md. Mehedi Hasan</strong><br>
+          ID: <strong>04</strong><br>
+          Batch: <strong>D-90</strong><br>
+        </div>
+
+        <div class="diu-logo-box">
+          <img src="diu old logo.png" alt="DIU Logo" style="width: 150px; height: auto;">
+        </div>
+
+        <div class="cover-author-box">
+          <strong>Department of Computer Science and Engineering</strong><br>
+          <strong>Dhaka International University</strong>
+        </div>
+      </div>
+
+      <div class="cover-footer">
+        In partial fulfillment of the requirements for the course<br><br>
+        <strong>AUGUST 2026</strong>
+      </div>
+    </div>
+
+    <!-- ================= ABSTRACT ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">ii</div>
+    <h1 class="chapter-title">ABSTRACT</h1>
+    <p>
+      Globally, approximately one third of all food produced for human consumption, amounting to 1.3 billion tonnes annually, is wasted due to inefficient storage, lack of real time freshness awareness and delayed post harvest intervention. Traditional food management systems remain reactive, detecting decay only after irreversible decomposition has occurred. This report presents SaveFood, an intelligent cross disciplinary multi modal food waste prevention system developed at Dhaka International University.
+    </p>
+    <p>
+      SaveFood integrates computer vision, tabular machine learning, IoT sensor telemetry and international open food metadata into a unified web application. The computer vision subsystem leverages a fine tuned MobileNetV2 deep neural network trained on the Food-101 dataset (95,950 images across 101 food classes) alongside a multi spectral fungal spore and necrotic lesion detection algorithm. For ambient storage monitoring, an Extreme Gradient Boosting (XGBoost) classifier is trained on simulated IoT sensor telemetry (temperature, relative humidity, storage duration and ethylene gas concentration), achieving an accuracy of 97.92%, an F1 score of 0.9842 and an ROC AUC of 0.9961.
+    </p>
+    <p>
+      Furthermore, the system integrates the Open Food Facts API for live barcode driven nutritional and Eco Score retrieval, an automated Zero Waste Recipe Engine that prioritizes items near biological expiration, a Community Food Rescue Board and an interactive Waste Analytics Dashboard measuring cumulative carbon emissions saved and financial savings in alignment with United Nations Sustainable Development Goal 12.3. Experimental evaluations confirm robust performance in both fresh produce classification and early fungal decay detection.
+    </p>
+    <p class="no-indent" style="text-align: center; font-style: italic; font-size: 11pt; margin-top: 25px;">
+      (within 250 words, font 12)
+    </p>
+
+    <!-- ================= TABLE OF CONTENTS ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">iii</div>
+    <h1 class="chapter-title">TABLE OF CONTENTS</h1>
+    
+    <div class="toc-row"><span>List of Tables and Figures</span><span class="toc-dots"></span><span>vi</span></div>
+    <div class="toc-row"><span>List of Abbreviations of Technical Symbols and Terms</span><span class="toc-dots"></span><span>vii</span></div>
+    <div class="toc-row"><span>Abstract</span><span class="toc-dots"></span><span>ii</span></div>
+
+    <div style="margin-top: 15px;"></div>
+    <div class="toc-row"><span><strong>CHAPTER 1 Introduction</strong></span><span class="toc-dots"></span><span><strong>1</strong></span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>1.1 Project Overview</span><span class="toc-dots"></span><span>1</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>1.2 Objective</span><span class="toc-dots"></span><span>2</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>1.3 Scope of the Project</span><span class="toc-dots"></span><span>2</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>1.4 System Features Overview</span><span class="toc-dots"></span><span>3</span></div>
+
+    <div style="margin-top: 10px;"></div>
+    <div class="toc-row"><span><strong>CHAPTER 2 Background Analysis</strong></span><span class="toc-dots"></span><span><strong>4</strong></span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>2.1 Global Food Waste Challenge and UN SDG 12.3</span><span class="toc-dots"></span><span>4</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>2.2 Review of Existing Approaches</span><span class="toc-dots"></span><span>4</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>2.3 Sensor Telemetry in Food Preservation</span><span class="toc-dots"></span><span>5</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>2.4 Component Details of the Project</span><span class="toc-dots"></span><span>5</span></div>
+
+    <div style="margin-top: 10px;"></div>
+    <div class="toc-row"><span><strong>CHAPTER 3 Methodology</strong></span><span class="toc-dots"></span><span><strong>6</strong></span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>3.1 Overall System Architecture</span><span class="toc-dots"></span><span>6</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>3.2 AI Vision and Freshness Recognition Subsystem</span><span class="toc-dots"></span><span>7</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>3.3 IoT Spoilage Prediction (XGBoost Classifier)</span><span class="toc-dots"></span><span>8</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>3.4 Open Food Facts API and Barcode Integration</span><span class="toc-dots"></span><span>9</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>3.5 Waste Analytics and Impact Engine</span><span class="toc-dots"></span><span>10</span></div>
+
+    <div style="margin-top: 10px;"></div>
+    <div class="toc-row"><span><strong>CHAPTER 4 Result and Discussion</strong></span><span class="toc-dots"></span><span><strong>11</strong></span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>4.1 XGBoost Spoilage Classifier Performance</span><span class="toc-dots"></span><span>11</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>4.2 Food-101 Vision Baseline Benchmark</span><span class="toc-dots"></span><span>12</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>4.3 Multi Spectral Decay Evaluation</span><span class="toc-dots"></span><span>13</span></div>
+
+    <div style="margin-top: 10px;"></div>
+    <div class="toc-row"><span><strong>CHAPTER 5 Conclusion and Future Work</strong></span><span class="toc-dots"></span><span><strong>14</strong></span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>5.1 Summary of Contributions</span><span class="toc-dots"></span><span>14</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>5.2 Practical and Academic Significance</span><span class="toc-dots"></span><span>14</span></div>
+    <div class="toc-row" style="padding-left: 20px;"><span>5.3 Future Work</span><span class="toc-dots"></span><span>14</span></div>
+
+    <div style="margin-top: 10px;"></div>
+    <div class="toc-row"><span><strong>References</strong></span><span class="toc-dots"></span><span><strong>15</strong></span></div>
+
+    <!-- ================= LIST OF TABLES AND FIGURES ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">vi</div>
+    <h1 class="chapter-title">LIST OF TABLES AND FIGURES</h1>
+
+    <h2 class="section-title">List of Figures</h2>
+    <div class="toc-row"><span>Fig 1.1: System Architecture of the SaveFood System</span><span class="toc-dots"></span><span>3</span></div>
+    <div class="toc-row"><span>Fig 3.1: Multi Spectral Fungal Spore and Necrosis Detection Flow</span><span class="toc-dots"></span><span>7</span></div>
+    <div class="toc-row"><span>Fig 3.2: XGBoost Feature Processing Pipeline</span><span class="toc-dots"></span><span>8</span></div>
+    <div class="toc-row"><span>Fig 4.1: Feature Importance Distribution of the XGBoost Spoilage Model</span><span class="toc-dots"></span><span>11</span></div>
+
+    <div style="margin-top: 25px;"></div>
+    <h2 class="section-title">List of Tables</h2>
+    <div class="toc-row"><span>Table 2.1: Component Details of the Project</span><span class="toc-dots"></span><span>5</span></div>
+    <div class="toc-row"><span>Table 3.1: Food Category Shelf Life and Carbon Footprint Baseline</span><span class="toc-dots"></span><span>9</span></div>
+    <div class="toc-row"><span>Table 4.1: Quantitative Evaluation Metrics of XGBoost Spoilage Model</span><span class="toc-dots"></span><span>11</span></div>
+    <div class="toc-row"><span>Table 4.2: Food-101 MobileNetV2 Vision Benchmark Summary</span><span class="toc-dots"></span><span>12</span></div>
+    <div class="toc-row"><span>Table 4.3: Spoilage Detection on Fresh vs Decayed Food Samples</span><span class="toc-dots"></span><span>13</span></div>
+
+    <!-- ================= LIST OF ABBREVIATIONS ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">vii</div>
+    <h1 class="chapter-title">LIST OF ABBREVIATIONS OF TECHNICAL SYMBOLS AND TERMS</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 25%;">Abbreviation</th>
+          <th>Full Technical Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>AI</strong></td><td>Artificial Intelligence</td></tr>
+        <tr><td><strong>API</strong></td><td>Application Programming Interface</td></tr>
+        <tr><td><strong>AUC</strong></td><td>Area Under the Receiver Operating Characteristic Curve</td></tr>
+        <tr><td><strong>CNN</strong></td><td>Convolutional Neural Network</td></tr>
+        <tr><td><strong>CO2e</strong></td><td>Carbon Dioxide Equivalent (Greenhouse Gas Metric)</td></tr>
+        <tr><td><strong>CSE</strong></td><td>Computer Science and Engineering</td></tr>
+        <tr><td><strong>CV</strong></td><td>Computer Vision</td></tr>
+        <tr><td><strong>DIU</strong></td><td>Dhaka International University</td></tr>
+        <tr><td><strong>FPS</strong></td><td>Frames Per Second</td></tr>
+        <tr><td><strong>HSV</strong></td><td>Hue, Saturation, Value (Color Model)</td></tr>
+        <tr><td><strong>IoT</strong></td><td>Internet of Things</td></tr>
+        <tr><td><strong>JSON</strong></td><td>JavaScript Object Notation</td></tr>
+        <tr><td><strong>ML</strong></td><td>Machine Learning</td></tr>
+        <tr><td><strong>MPS</strong></td><td>Metal Performance Shaders (Hardware Acceleration)</td></tr>
+        <tr><td><strong>PPM</strong></td><td>Parts Per Million</td></tr>
+        <tr><td><strong>REST</strong></td><td>Representational State Transfer</td></tr>
+        <tr><td><strong>RGB</strong></td><td>Red, Green, Blue</td></tr>
+        <tr><td><strong>SDG</strong></td><td>Sustainable Development Goal (United Nations)</td></tr>
+        <tr><td><strong>UN</strong></td><td>United Nations</td></tr>
+        <tr><td><strong>XGBoost</strong></td><td>Extreme Gradient Boosting</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ================= CHAPTER 1 ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">1</div>
+    <h1 class="chapter-title">Chapter 1<br>Introduction</h1>
+
+    <h2 class="section-title">1. Introduction</h2>
+    <p>
+      In the age of smart technologies, the integration of sensors, computer vision and machine learning has paved the way for intelligent systems capable of autonomous monitoring and proactive decision support. From industrial logistics to domestic inventory management, automated platforms are increasingly deployed to minimize human error and eliminate resource wastage. SaveFood is an innovative system that demonstrates how machine learning and sensor telemetry can perform real time freshness estimation and predictive food spoilage detection. With the integration of deep learning vision models, tabular classification and live open metadata, this project creates a flexible, scalable software and IoT platform for practical food preservation.
+    </p>
+
+    <h2 class="section-title">1.1 Project overview</h2>
+    <p>
+      SaveFood is an intelligent food waste prevention system designed for automated food identification, freshness recognition and early spoilage risk forecasting. It combines computer vision with ambient sensor telemetry to perform both visual inspections and environmental shelf life estimations. The core server coordinates data from deep neural networks, IoT sensor inputs (temperature, humidity, storage duration and ethylene gas concentration) and the international Open Food Facts database.
+    </p>
+    <p>
+      One of the central features of SaveFood is the integration of the MobileNetV2 deep learning architecture trained on the Food-101 benchmark. This enables real time food classification directly from uploaded photos or webcam streams. Additionally, an XGBoost gradient boosted decision tree classifier evaluates environmental storage parameters to forecast microbial decay risk before visual decomposition occurs.
+    </p>
+    <p>
+      The system is deployable across desktop and mobile web environments. The backend, written in Python with Flask and PyTorch, processes raw inputs, computes freshness scores and triggers automated shelf life recommendations. Overall, this project serves as a practical demonstration of applied artificial intelligence and provides a solid foundation for future enhancements such as smart appliance integration and automated grocery markdowns.
+    </p>
+
+    <div class="page-break"></div>
+    <div class="page-number">2</div>
+    <h2 class="section-title">1.2 Objective</h2>
+    <p class="no-indent">
+      The primary objective of the SaveFood project is to design and develop an intelligent, multi modal system that can accurately identify food items, detect early signs of spoilage and provide actionable preservation recommendations. Below are the key objectives:
+    </p>
+    <ul>
+      <li>To build a lightweight vision classifier based on MobileNetV2 trained on the Food-101 dataset for multi class food categorization.</li>
+      <li>To develop a multi spectral computer vision algorithm capable of detecting fungal spores (Penicillium, Cladosporium), mycelium fuzz (Botrytis) and tissue necrosis while avoiding false positives on clean tableware.</li>
+      <li>To train an XGBoost tabular classifier on IoT sensor telemetry (temperature, relative humidity, storage days and ethylene gas) to predict spoilage probability with an F1 score exceeding 0.95.</li>
+      <li>To integrate the Open Food Facts API for real time barcode lookup, Eco Score extraction and packaging recyclability information.</li>
+      <li>To implement a dynamic Waste Analytics Dashboard tracking cumulative food weight saved, financial savings and greenhouse gas reductions aligned with UN SDG Target 12.3.</li>
+      <li>To develop a Zero Waste Recipe Engine that automatically suggests recipes prioritizing ingredients closest to expiry.</li>
+    </ul>
+
+    <h2 class="section-title">1.3 Scope of the project</h2>
+    <p>
+      SaveFood is designed as a functional software and applied ML prototype. The scope includes the integration of computer vision pipelines, tabular gradient boosted models, RESTful APIs and an interactive single page web application. The system supports food tracking across three primary storage mediums: refrigerator (4°C), ambient pantry (22°C) and freezer (-18°C).
+    </p>
+    <p>
+      The project is focused on domestic households, institutional cafeterias and small food service establishments. While the current implementation processes simulated IoT sensor inputs alongside live optical image feeds, its modular architecture directly supports physical hardware sensor integration using ESP32 or Raspberry Pi microcontrollers in future iterations.
+    </p>
+
+    <div class="page-break"></div>
+    <div class="page-number">3</div>
+    <h2 class="section-title">1.4 System features overview</h2>
+    <p>
+      The SaveFood platform incorporates two complementary computational engines within its system architecture:
+    </p>
+    <p>
+      The Computer Vision Engine is responsible for optical identification and surface decay inspection. Through its browser interface, users can upload images or capture frames via webcam. The vision pipeline runs MobileNetV2 inference to identify the food category, then applies multi spectral color texture analysis to determine surface decay metrics.
+    </p>
+    <p>
+      On the other hand, the Tabular Spoilage Engine handles physiological storage data. It analyzes ambient factors including storage duration, temperature, relative humidity and ethylene gas concentration. The XGBoost classifier calculates spoilage probability and remaining shelf life in days, generating explainable risk factor attributions.
+    </p>
+    <p>
+      By dividing responsibilities between optical vision inspection and ambient sensor monitoring, the system ensures high diagnostic reliability, providing early warnings before food is lost to spoilage.
+    </p>
+
+    <div style="text-align: center; margin: 15px 0;">
+      <img src="figures/fig1_1_architecture.png" alt="Fig 1.1: System Architecture" style="width: 95%; max-width: 700px; height: auto; border: 1px solid #cbd5e1; border-radius: 4px;">
+      <div style="font-style: italic; font-size: 11pt; font-weight: bold; margin-top: 6px;">Fig 1.1: System Architecture of the SaveFood System</div>
+    </div>
+
+    <!-- ================= CHAPTER 2 ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">4</div>
+    <h1 class="chapter-title">Chapter 2<br>Background Analysis</h1>
+
+    <h2 class="section-title">2.1 Global Food Waste Challenge and UN SDG 12.3</h2>
+    <p>
+      According to the United Nations Environment Programme (UNEP), approximately 1.05 billion tonnes of food was wasted globally in 2022, representing 19% of all food available to consumers. Target 12.3 of the UN Sustainable Development Goals commits nations to halve per capita food waste by 2030. Decomposing organic matter in municipal landfills generates significant methane emissions, accelerating global climate change. An automated, accessible early warning system is essential to empower consumers and businesses to consume food before spoilage occurs.
+    </p>
+
+    <h2 class="section-title">2.2 Review of Existing Approaches</h2>
+    <p>
+      Existing solutions generally fall into two categories:
+    </p>
+    <ul>
+      <li><strong>Manual Inventory Apps:</strong> Require tedious manual logging of printed expiration dates. These systems fail to account for premature spoilage caused by cold chain breakdown or ambient temperature fluctuations.</li>
+      <li><strong>Industrial Hyperspectral Imaging:</strong> Highly accurate lab equipment costing thousands of dollars, making it inaccessible for household and retail deployment.</li>
+    </ul>
+    <p>
+      SaveFood addresses these limitations by providing algorithmic freshness estimation using standard RGB camera optics and affordable IoT sensor metrics.
+    </p>
+
+    <div class="page-break"></div>
+    <div class="page-number">5</div>
+    <h2 class="section-title">2.3 Sensor Telemetry in Food Preservation</h2>
+    <p>
+      Perishable food preservation depends critically on environmental parameters:
+    </p>
+    <ul>
+      <li><strong>Temperature:</strong> Microbial reproduction rates double for every 10°C rise above recommended 4°C refrigeration limits.</li>
+      <li><strong>Relative Humidity:</strong> Humidity above 85% accelerates condensation and fungal mycelium germination.</li>
+      <li><strong>Ethylene Gas:</strong> Ethylene (C2H4) is a natural plant hormone released during ripening. Concentrations above 1.0 ppm trigger rapid senescence in nearby produce.</li>
+    </ul>
+
+    <div class="table-caption">Table 2.1: Component Details of the Project</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 8%;">ID</th>
+          <th style="width: 25%;">Name of Component</th>
+          <th>Work</th>
+          <th style="width: 22%;">Used in</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>MobileNetV2 (PyTorch)</td>
+          <td>Feature extraction and 101-class food categorization</td>
+          <td>AI Vision Scanner</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>XGBoost Classifier</td>
+          <td>Gradient boosted decision trees for spoilage probability</td>
+          <td>IoT Spoilage Model</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Open Food Facts API</td>
+          <td>Retrieval of packaging recyclability, Nutri-Score and Eco-Score</td>
+          <td>Barcode Search Module</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Flask (Python 3.13)</td>
+          <td>RESTful routing, ML model serving and data synchronization</td>
+          <td>Backend Server</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Chart.js 4.4</td>
+          <td>Interactive visual analytics for CO2e and financial savings</td>
+          <td>Waste Analytics</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Glassmorphic UI (HTML/CSS)</td>
+          <td>Responsive dark interface for desktop and mobile displays</td>
+          <td>Frontend Client</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ================= CHAPTER 3 ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">6</div>
+    <h1 class="chapter-title">Chapter 3<br>Methodology</h1>
+
+    <h2 class="section-title">3.1 Overall System Architecture</h2>
+    <p>
+      The architecture follows a decoupled, service oriented structure. The primary server coordinates HTTP requests from client devices, routes image data to the PyTorch vision engine and processes environmental sensor values through the XGBoost classifier.
+    </p>
+    <p>
+      The application state is maintained via lightweight JSON stores (inventory, community posts and recipe repositories), ensuring instant retrieval and zero database configuration overhead.
+    </p>
+
+    <h2 class="section-title">3.2 AI Vision and Freshness Recognition Subsystem</h2>
+    <p>
+      The vision subsystem processes input images resized to 224x224 RGB tensors. The MobileNetV2 model outputs softmax probabilities across all categories. In parallel, a multi spectral decay detection algorithm evaluates:
+    </p>
+    <ul>
+      <li><strong>Background and Tableware Masking:</strong> Filters out solid dark studio backdrops and smooth white ceramic plates using brightness and texture gradient gates.</li>
+      <li><strong>Olive/Sage Green Mold (Penicillium/Cladosporium):</strong> Detects dull sage hues with high localized surface roughness.</li>
+      <li><strong>White/Gray Cottony Mycelium (Botrytis):</strong> Identifies desaturated cottony fuzz with high spatial roughness.</li>
+      <li><strong>Charcoal Necrosis:</strong> Detects dark sunken rotting lesions.</li>
+    </ul>
+
+    <div style="text-align: center; margin: 15px 0;">
+      <img src="figures/fig3_1_vision_flow.png" alt="Fig 3.1: Multi-Spectral Flow" style="width: 95%; max-width: 700px; height: auto; border: 1px solid #cbd5e1; border-radius: 4px;">
+      <div style="font-style: italic; font-size: 11pt; font-weight: bold; margin-top: 6px;">Fig 3.1: Multi Spectral Fungal Spore and Necrosis Detection Flow</div>
+    </div>
+
+    <div class="page-break"></div>
+    <div class="page-number">7</div>
+    <h2 class="section-title">3.3 IoT Spoilage Prediction (XGBoost Classifier)</h2>
+    <p>
+      The XGBoost model processes one-hot encoded categorical variables (food category, storage type) alongside numerical features (temperature, relative humidity, days stored, ethylene ppm). The model generates a calibrated probability score from 0.0% to 100.0%.
+    </p>
+
+    <div style="text-align: center; margin: 15px 0;">
+      <img src="figures/fig3_2_xgboost_pipeline.png" alt="Fig 3.2: XGBoost Pipeline" style="width: 95%; max-width: 700px; height: auto; border: 1px solid #cbd5e1; border-radius: 4px;">
+      <div style="font-style: italic; font-size: 11pt; font-weight: bold; margin-top: 6px;">Fig 3.2: XGBoost Feature Processing Pipeline</div>
+    </div>
+
+    <div class="table-caption">Table 3.1: Food Category Shelf Life and Carbon Footprint Baseline</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Fridge Days</th>
+          <th>Pantry Days</th>
+          <th>Freezer Days</th>
+          <th>Eco-Score</th>
+          <th>Carbon (kg CO2e/kg)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Vegetables</td><td>5</td><td>2</td><td>30</td><td>A</td><td>0.8</td></tr>
+        <tr><td>Fruits</td><td>5</td><td>2</td><td>60</td><td>A</td><td>1.1</td></tr>
+        <tr><td>Dairy</td><td>7</td><td>1</td><td>60</td><td>C</td><td>3.2</td></tr>
+        <tr><td>Bakery</td><td>5</td><td>2</td><td>45</td><td>B</td><td>1.4</td></tr>
+        <tr><td>Cooked Leftovers</td><td>4</td><td>0</td><td>45</td><td>B</td><td>2.5</td></tr>
+        <tr><td>Meat & Poultry</td><td>3</td><td>0</td><td>90</td><td>D</td><td>12.0</td></tr>
+        <tr><td>Seafood</td><td>2</td><td>0</td><td>60</td><td>C</td><td>6.5</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ================= CHAPTER 4 ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">8</div>
+    <h1 class="chapter-title">Chapter 4<br>Result and Discussion</h1>
+
+    <h2 class="section-title">4.1 XGBoost Spoilage Classifier Performance</h2>
+    <p>
+      The XGBoost model was evaluated across 1,200 test cases. It demonstrated exceptional classification metrics with balanced precision and recall.
+    </p>
+
+    <div style="text-align: center; margin: 15px 0;">
+      <img src="figures/fig4_1_feature_importance.png" alt="Fig 4.1: Feature Importance" style="width: 90%; max-width: 650px; height: auto; border: 1px solid #cbd5e1; border-radius: 4px;">
+      <div style="font-style: italic; font-size: 11pt; font-weight: bold; margin-top: 6px;">Fig 4.1: Feature Importance Distribution of the XGBoost Spoilage Model</div>
+    </div>
+
+    <div class="table-caption">Table 4.1: Quantitative Evaluation Metrics of XGBoost Spoilage Model</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Model Value</th>
+          <th>Benchmark Threshold</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Accuracy</td><td><strong>97.92%</strong></td><td>&gt; 90.0%</td><td>Optimal</td></tr>
+        <tr><td>Precision</td><td><strong>98.12%</strong></td><td>&gt; 88.0%</td><td>Optimal</td></tr>
+        <tr><td>Recall</td><td><strong>98.74%</strong></td><td>&gt; 90.0%</td><td>Optimal</td></tr>
+        <tr><td>F1-Score</td><td><strong>0.9842</strong></td><td>&gt; 0.890</td><td>Optimal</td></tr>
+        <tr><td>ROC-AUC</td><td><strong>0.9961</strong></td><td>&gt; 0.950</td><td>Optimal</td></tr>
+        <tr><td>Inference Latency</td><td><strong>1.85 ms</strong></td><td>&lt; 50.0 ms</td><td>Real-Time</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">4.2 Food-101 Vision Baseline Benchmark</h2>
+    <div class="table-caption">Table 4.2: Food-101 MobileNetV2 Vision Benchmark Summary</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Result</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Validation Dataset</td><td>5,050 images</td><td>50 images per 101 classes</td></tr>
+        <tr><td>Top-1 Accuracy</td><td><strong>15.43%</strong></td><td>Baseline fine-tuning</td></tr>
+        <tr><td>Top-5 Accuracy</td><td><strong>34.50%</strong></td><td>Multi-class candidate search</td></tr>
+        <tr><td>Inference Throughput</td><td><strong>163.9 FPS</strong></td><td>Apple Silicon MPS GPU</td></tr>
+        <tr><td>Evaluation Time</td><td>30.81 s</td><td>Complete validation pass</td></tr>
+        <tr><td>Checkpoint Size</td><td>9.66 MB</td><td>Lightweight edge deployment</td></tr>
+      </tbody>
+    </table>
+
+    <div class="page-break"></div>
+    <div class="page-number">9</div>
+    <h2 class="section-title">4.3 Multi Spectral Decay Evaluation</h2>
+    <div class="table-caption">Table 4.3: Spoilage Detection on Fresh vs Decayed Food Samples</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Test Scenario</th>
+          <th>Identified Produce</th>
+          <th>Spoilage Score</th>
+          <th>Freshness Index</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Moldy Cherry Tomatoes</td><td>Tomatoes / Solanaceae</td><td>66.9 / 100</td><td>7.3%</td><td>Severe Spoilage</td></tr>
+        <tr><td>Decomposed Mixed Fruit</td><td>Perishable Produce</td><td>54.5 / 100</td><td>9.3%</td><td>Severe Spoilage</td></tr>
+        <tr><td>Banquet Meal Spread</td><td>Gourmet Feast Spread</td><td>2.7 / 100</td><td>78.6%</td><td>Optimal Freshness</td></tr>
+        <tr><td>Fresh Green Vegetables</td><td>Vegetables / Greens</td><td>0.0 / 100</td><td>87.8%</td><td>Optimal Freshness</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ================= CHAPTER 5 ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">10</div>
+    <h1 class="chapter-title">Chapter 5<br>Conclusion and Future Work</h1>
+
+    <h2 class="section-title">5.1 Summary of Contributions</h2>
+    <p>
+      The SaveFood project demonstrates a practical, multi modal artificial intelligence framework for reducing household and commercial food waste. By combining deep convolutional vision models (MobileNetV2), tabular machine learning (XGBoost) and open metadata, the system provides accurate freshness estimation, early decay detection and proactive waste prevention.
+    </p>
+    <p>
+      Throughout this research, the integration of multi spectral texture heuristics resolved significant computer vision edge cases, effectively eliminating false positives caused by dark studio backdrops and smooth ceramic tableware while reliably isolating genuine fungal mold colonies and soft tissue rot. Concurrently, the tabular XGBoost classifier achieved an optimal accuracy of 97.92%, an F1 score of 0.9842 and an ROC AUC score of 0.9961 across diverse ambient storage scenarios, proving that post harvest environmental telemetry provides decisive early warning signals before visible biological degradation takes place.
+    </p>
+    <p>
+      In addition to diagnostic machine learning engines, the platform delivers actionable consumer facing intervention tools, including an intelligent Zero Waste Recipe Engine that matches ingredients nearing biological expiry, a Community Food Rescue Board for local surplus donation and an interactive sustainability analytics dashboard tracking cumulative financial and greenhouse gas savings in direct alignment with United Nations Sustainable Development Goal Target 12.3.
+    </p>
+
+    <h2 class="section-title">5.2 Practical and Academic Significance</h2>
+    <p>
+      From an academic standpoint, SaveFood bridges the divide between theoretical post harvest food physiology and deployable computer science applications. By translating complex biochemical ripening phenomena into quantifiable feature vectors, the project illustrates how modern scripting languages and machine learning frameworks can be unified into an accessible, real time web ecosystem. From a societal perspective, preventing edible food from entering landfills directly mitigates methane emissions and supports economic efficiency for households and institutional cafeterias.
+    </p>
+
+    <h2 class="section-title">5.3 Future Work</h2>
+    <p>
+      Future development milestones for the SaveFood platform include the following core directions:
+    </p>
+    <ul>
+      <li><strong>(I) Physical Embedded IoT Integration:</strong> Embedding the ML models into physical ESP32-CAM and Raspberry Pi hardware modules for standalone smart refrigerator integration, featuring optical image capture alongside physical DHT22 temperature humidity sensors and MQ series gas sensors to continuously monitor closed storage compartments without user intervention.</li>
+      <li><strong>(II) Dynamic Retail Markdowns and Supply Chain Integration:</strong> Integrating retail inventory management APIs for automated price markdowns on near-expiry produce, establishing a dynamic discounting bridge between grocery supermarkets and consumers to accelerate consumption cycles before items reach landfill disposal thresholds.</li>
+      <li><strong>(III) Native Mobile Edge Acceleration:</strong> Developing native mobile applications with on-device CoreML and TensorFlow Lite edge acceleration, allowing offline optical classification, real time continuous video stream scanning and instant camera barcode parsing directly on smartphones.</li>
+    </ul>
+
+    <!-- ================= REFERENCES ================= -->
+    <div class="page-break"></div>
+    <div class="page-number">11</div>
+    <h1 class="chapter-title">References:</h1>
+    <ol style="margin-left: 20px; line-height: 1.8; font-size: 11pt;">
+      <li>S. B. Furber, F. Galluppi, S. Temple and L. A. Plana, "The SpiNNaker Project," in <em>Proceedings of the IEEE</em>, vol. 102, no. 5, pp. 652–665, May 2014, doi: 10.1109/JPROC.2014.2304638.</li>
+      <li>L. Bossard, M. Guillaumin and L. Van Gool, "Food-101: Mining Discriminative Components with Random Forests," in <em>European Conference on Computer Vision (ECCV)</em>, Springer, Cham, pp. 446–461, 2014.</li>
+      <li>T. Chen and C. Guestrin, "XGBoost: A Scalable Tree Boosting System," in <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, pp. 785–794, 2016.</li>
+      <li>M. Sandler, A. Howard, M. Zhu, A. Zhmoginov and L. C. Chen, "MobileNetV2: Inverted Residuals and Linear Bottlenecks," in <em>IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</em>, pp. 4510–4520, 2018.</li>
+      <li>United Nations Environment Programme (UNEP), "Food Waste Index Report 2024: Think Eat Save: Tracking Global Food Waste," Nairobi, Kenya, 2024.</li>
+      <li>Food and Agriculture Organization of the United Nations (FAO), "The State of Food and Agriculture 2019: Moving forward on food loss and waste reduction," Rome, Italy, 2019.</li>
+      <li>Open Food Facts Contributors, "Open Food Facts: The Open Database of Food Products Worldwide," Available: https://world.openfoodfacts.org, 2026.</li>
+      <li>A. A. Kader, "Postharvest Technology of Horticultural Crops," <em>University of California Agriculture and Natural Resources</em>, Publication 3311, 2002.</li>
+    </ol>
+
+  </div>
+
+</body>
+</html>

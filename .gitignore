@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Large ML data and model weights (too large for GitHub)
+data/food-101/
+data/food-101.tar.gz
+models/*.pth
+models/*.pkl
+models/*.model
+
+# Keep class index JSON
+!models/food101_classes.json

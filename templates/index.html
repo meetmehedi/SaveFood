@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaveFood 🥗 — Intelligent Food Waste Prevention System</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-wrapper">
+        <div class="brand-icon">🥗</div>
+        <div class="brand-text">
+          <h1>SaveFood</h1>
+          <span class="brand-tag">AI Spoilage Guard</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a class="nav-item active" data-tab="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-item" data-tab="scanner">
+          <i class="fas fa-camera"></i>
+          <span>AI Food Scanner</span>
+        </a>
+        <a class="nav-item" data-tab="spoilage">
+          <i class="fas fa-microchip"></i>
+          <span>IoT Spoilage Model</span>
+        </a>
+        <a class="nav-item" data-tab="inventory">
+          <i class="fas fa-boxes-stacked"></i>
+          <span>Smart Inventory</span>
+          <span class="nav-badge" id="nav-inventory-badge">7 Items</span>
+        </a>
+        <a class="nav-item" data-tab="recipes">
+          <i class="fas fa-kitchen-set"></i>
+          <span>Rescue Recipes</span>
+        </a>
+        <a class="nav-item" data-tab="openfoodfacts">
+          <i class="fas fa-barcode"></i>
+          <span>Open Food Facts</span>
+        </a>
+        <a class="nav-item" data-tab="community">
+          <i class="fas fa-hand-holding-heart"></i>
+          <span>Community Rescue</span>
+        </a>
+        <a class="nav-item" data-tab="analytics">
+          <i class="fas fa-chart-line"></i>
+          <span>Waste Analytics</span>
+        </a>
+        <a class="nav-item" data-tab="research">
+          <i class="fas fa-graduation-cap"></i>
+          <span>DIU Lab Proposal</span>
+        </a>
+      </nav>
+
+      <!-- DIU Academic Card -->
+      <div class="academic-card" id="academic-trigger">
+        <span class="academic-badge">DIU • Lab 04</span>
+        <div class="academic-title">Md. Mehedi Hasan</div>
+        <div class="academic-subtitle">Roll: 04 • Batch: D-90</div>
+        <div style="font-size: 0.68rem; color: #10b981; margin-top: 4px;">Supervisor: Md. Muksit Ul Islam</div>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="main-content">
+      
+      <!-- Top Sticky Header -->
+      <header class="top-header">
+        <div class="header-title">
+          <h2 id="current-page-title">Dashboard & Overview</h2>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn btn-secondary" data-action-tab="scanner">
+            <i class="fas fa-camera"></i> Quick Scan
+          </button>
+          <button class="action-btn btn-primary" id="btn-open-add-modal">
+            <i class="fas fa-plus"></i> Add Food Item
+          </button>
+        </div>
+      </header>
+
+      <!-- ================= PAGE 1: DASHBOARD ================= -->
+      <section class="page-view active" id="view-dashboard">
+        
+        <!-- Welcome Banner -->
+        <div class="glass-panel" style="background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.1)); border-color: rgba(16,185,129,0.3); margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <span class="badge good" style="margin-bottom: 0.5rem;">AI Food Waste Prevention System</span>
+              <h2 style="font-size: 1.7rem; font-weight: 700; color: #fff;">Turn Food Waste Into Measurable Sustainability</h2>
+              <p style="color: #cbd5e1; max-width: 650px; font-size: 0.92rem; margin-top: 0.35rem;">
+                Combines <strong>MobileNetV2 Vision</strong>, <strong>XGBoost Spoilage Classifier (F1: 0.89)</strong>, and <strong>Open Food Facts metadata</strong> to rescue food before it expires.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+              <button class="action-btn btn-primary" data-action-tab="scanner">
+                <i class="fas fa-camera"></i> Scan Food Photo
+              </button>
+              <button class="action-btn btn-secondary" data-action-tab="spoilage">
+                <i class="fas fa-sliders"></i> Test Sensor Model
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Key Stat Cards -->
+        <div class="grid-4" style="margin-bottom: 1.5rem;">
+          <div class="stat-card">
+            <div class="stat-icon emerald"><i class="fas fa-shield-halved"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="dash-kpi-saved">48.6 kg</div>
+              <div class="stat-label">Food Waste Prevented</div>
+              <div class="stat-delta positive">↑ 18% vs last month</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon cyan"><i class="fas fa-dollar-sign"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="dash-kpi-money">$342.50</div>
+              <div class="stat-label">Estimated Money Saved</div>
+              <div class="stat-delta positive">↑ $52.50 this week</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber"><i class="fas fa-bell"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="dash-kpi-risk">3 Items</div>
+              <div class="stat-label">Near-Expiry Attention</div>
+              <div class="stat-delta negative">Requires action today</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon indigo"><i class="fas fa-boxes-stacked"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="dash-kpi-items">7 Items</div>
+              <div class="stat-label">Active Tracked Inventory</div>
+              <div class="stat-delta positive">Across Fridge & Pantry</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Split View -->
+        <div class="grid-2-1">
+          
+          <!-- Recent Inventory Alerts -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-triangle-exclamation" style="color: #f59e0b;"></i>
+                Critical Freshness Watch
+              </div>
+              <button class="action-btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" data-action-tab="inventory">
+                View Full Inventory →
+              </button>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div class="glass-panel" style="background: rgba(244,63,94,0.08); border-color: rgba(244,63,94,0.3); padding: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&auto=format&fit=crop&q=60" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;" alt="Spinach">
+                  <div>
+                    <div style="font-weight: 600; color: #fff;">Organic Baby Spinach</div>
+                    <div style="font-size: 0.78rem; color: #fb7185;">Spoilage Risk: 78% • Stored: 5.0 Days (High humidity)</div>
+                  </div>
+                </div>
+                <button class="action-btn btn-danger" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" data-action-tab="recipes">
+                  Use in Recipe
+                </button>
+              </div>
+
+              <div class="glass-panel" style="background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3); padding: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&auto=format&fit=crop&q=60" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;" alt="Strawberries">
+                  <div>
+                    <div style="font-weight: 600; color: #fff;">Fresh Organic Strawberries</div>
+                    <div style="font-size: 0.78rem; color: #fbbf24;">Spoilage Risk: 38% • Ethylene spike (0.85 ppm)</div>
+                  </div>
+                </div>
+                <button class="action-btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" data-action-tab="recipes">
+                  Make Smoothie
+                </button>
+              </div>
+
+              <div class="glass-panel" style="background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3); padding: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&auto=format&fit=crop&q=60" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;" alt="Milk">
+                  <div>
+                    <div style="font-weight: 600; color: #fff;">Whole Pasteurized Milk</div>
+                    <div style="font-size: 0.78rem; color: #fbbf24;">Spoilage Risk: 58% • Best before tomorrow</div>
+                  </div>
+                </div>
+                <button class="action-btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" data-action-tab="recipes">
+                  Make Pudding
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Lab Presentation Showcase -->
+          <div class="glass-panel" style="display: flex; flex-direction: column;">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-book-open"></i>
+                DIU Research Project
+              </div>
+            </div>
+            
+            <div class="terminal-block" style="flex: 1; display: flex; flex-direction: column;">
+              <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+                <span style="font-size: 0.75rem; color: #64748b; margin-left: 6px;">mehedihasan@diu:~/savefood</span>
+              </div>
+              <div style="font-size: 0.82rem; line-height: 1.6; color: #d1fae5;">
+                <span style="color: #38bdf8;">$</span> ./evaluate_models.sh<br>
+                [+] Vision: MobileNetV2 Food-101<br>
+                [+] Tabular ML: XGBoost Classifier<br>
+                [+] Spoilage F1-Score: <strong style="color: #34d399;">0.89</strong> (Calibrated)<br>
+                [+] Open Food Facts: Real-time API<br>
+                [+] Status: <span style="color: #34d399;">DEPLOYED & OPERATIONAL</span>
+              </div>
+              <button class="action-btn btn-primary" style="margin-top: auto; padding: 0.45rem; font-size: 0.8rem; justify-content: center;" data-action-tab="research">
+                <i class="fas fa-desktop"></i> View Full DIU Proposal
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PAGE 2: AI FOOD VISION SCANNER ================= -->
+      <section class="page-view" id="view-scanner">
+        <div class="grid-2">
+          
+          <!-- Scanner Input Column -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-camera"></i>
+                Capture or Upload Food Photo
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="action-btn btn-secondary" id="btn-start-camera">
+                  <i class="fas fa-video"></i> Start Webcam
+                </button>
+                <button class="action-btn btn-primary" id="btn-capture-camera" style="display: none;">
+                  <i class="fas fa-camera-retro"></i> Capture
+                </button>
+              </div>
+            </div>
+
+            <!-- Video & Preview Area -->
+            <div class="camera-preview-box" id="scanner-preview-box">
+              <video id="scanner-video" autoplay playsinline muted style="display: none;"></video>
+              <img id="scanner-preview-img" style="display: none;" alt="Scanned Food">
+              <div class="scan-laser" id="scan-laser"></div>
+              <div id="scanner-placeholder" style="text-align: center; color: #64748b;">
+                <i class="fas fa-cloud-arrow-up" style="font-size: 2.5rem; margin-bottom: 0.75rem; color: #10b981; opacity: 0.7;"></i>
+                <div style="font-size: 0.95rem; font-weight: 600; color: #e2e8f0;">No image loaded</div>
+                <div style="font-size: 0.8rem;">Click dropzone below or activate webcam</div>
+              </div>
+            </div>
+
+            <!-- Dropzone -->
+            <div class="scanner-dropzone" id="scanner-dropzone" style="margin-top: 1.25rem;">
+              <input type="file" id="scanner-file-input" accept="image/*" style="display: none;">
+              <i class="fas fa-file-image" style="font-size: 1.8rem; color: #10b981; margin-bottom: 0.5rem;"></i>
+              <div style="font-weight: 600; color: #fff; font-size: 0.95rem;">Drag & drop food image here</div>
+              <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.25rem;">or click to browse from device (JPG, PNG, WEBP)</div>
+            </div>
+          </div>
+
+          <!-- Scanner Results Column -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-brain"></i>
+                AI Vision & Freshness Analysis
+              </div>
+              <span class="badge cyan">MobileNetV2</span>
+            </div>
+
+            <div id="scanner-loading" style="display: none; text-align: center; padding: 3rem;">
+              <i class="fas fa-spinner fa-spin" style="font-size: 2.5rem; color: #10b981; margin-bottom: 1rem;"></i>
+              <div style="font-weight: 600; color: #fff;">Classifying Food & Evaluating Freshness...</div>
+              <div style="font-size: 0.8rem; color: #94a3b8;">Extracting Food-101 visual features</div>
+            </div>
+
+            <div id="scanner-results-container" style="display: none;">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem;">
+                <div>
+                  <h3 id="scan-food-name" style="font-size: 1.6rem; font-weight: 700; color: #fff;">Detected Food</h3>
+                  <div style="display: flex; gap: 0.5rem; margin-top: 0.35rem;">
+                    <span class="badge" id="scan-category" style="background: rgba(255,255,255,0.08); color: #cbd5e1;">Category</span>
+                    <span class="badge good" id="scan-confidence">95% Confidence</span>
+                  </div>
+                </div>
+                <span class="badge good" id="scan-freshness-status">Optimal Freshness</span>
+              </div>
+
+              <!-- Freshness Meter -->
+              <div class="freshness-meter-wrapper">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem;">
+                  <span style="color: #94a3b8;">Freshness Index</span>
+                  <span id="scan-freshness-val" style="font-weight: 700; color: #34d399; font-family: monospace;">85%</span>
+                </div>
+                <div class="freshness-bar-bg">
+                  <div class="freshness-bar-fill" id="scan-freshness-fill" style="width: 85%;"></div>
+                </div>
+              </div>
+
+              <!-- Recommendation -->
+              <div style="background: rgba(15,23,42,0.8); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; margin: 1rem 0;">
+                <div style="font-size: 0.75rem; color: #10b981; font-weight: 700; text-transform: uppercase;">Smart Recommendation</div>
+                <p id="scan-recommendation" style="font-size: 0.88rem; color: #e2e8f0; margin-top: 0.35rem; line-height: 1.4;">
+                  Ideal for immediate consumption or fresh storage.
+                </p>
+              </div>
+
+              <!-- Recommended Shelf Life Grid -->
+              <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.5rem; font-weight: 600;">Recommended Maximum Shelf Life</div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;">
+                <div style="background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2); border-radius: 8px; padding: 0.75rem; text-align: center;">
+                  <div style="font-size: 0.7rem; color: #06b6d4;"><i class="fas fa-snowflake"></i> Fridge</div>
+                  <div id="scan-shelf-fridge" style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-top: 2px;">5 Days</div>
+                </div>
+                <div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 0.75rem; text-align: center;">
+                  <div style="font-size: 0.7rem; color: #f59e0b;"><i class="fas fa-box"></i> Pantry</div>
+                  <div id="scan-shelf-pantry" style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-top: 2px;">2 Days</div>
+                </div>
+                <div style="background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.2); border-radius: 8px; padding: 0.75rem; text-align: center;">
+                  <div style="font-size: 0.7rem; color: #a78bfa;"><i class="fas fa-icicles"></i> Freezer</div>
+                  <div id="scan-shelf-freezer" style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-top: 2px;">60 Days</div>
+                </div>
+              </div>
+
+              <button class="action-btn btn-primary" id="btn-scan-add-inventory" style="width: 100%; justify-content: center; padding: 0.75rem;">
+                <i class="fas fa-plus"></i> Add Scanned Item to Smart Inventory
+              </button>
+            </div>
+
+            <div id="scanner-empty-state" style="text-align: center; padding: 3rem; color: #64748b;">
+              <i class="fas fa-sparkles" style="font-size: 2rem; margin-bottom: 0.75rem; opacity: 0.4;"></i>
+              <div>AI analysis results will appear here once an image is uploaded or captured.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PAGE 3: IOT SPOILAGE PREDICTION (XGBOOST) ================= -->
+      <section class="page-view" id="view-spoilage">
+        
+        <!-- Research Info Banner -->
+        <div class="glass-panel" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <span class="badge cyan" style="margin-bottom: 0.35rem;">Research Objective 02 • XGBoost Classifier</span>
+              <h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;">Real-Time IoT Environmental Spoilage Simulator</h3>
+              <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 2px;">
+                Trained on temperature, humidity, storage duration, and ethylene gas metrics. Validated <strong>F1-score: 0.89</strong>.
+              </p>
+            </div>
+            
+            <!-- Quick Preset Buttons -->
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="pill-btn" data-spoil-preset="fridge-fresh">🥬 Fresh Veg in Fridge</button>
+              <button class="pill-btn" data-spoil-preset="pantry-danger">🥛 Warm Dairy in Pantry</button>
+              <button class="pill-btn" data-spoil-preset="fruit-senescence">🍌 High Ethylene Fruit</button>
+              <button class="pill-btn" data-spoil-preset="freezer-safe">🥩 Frozen Meat</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          
+          <!-- Sensor Controls Form -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-sliders"></i>
+                IoT Sensor Telemetry Controls
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 1rem;">
+              <div>
+                <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Food Category</label>
+                <select class="custom-select" id="spoil-food-category">
+                  <option value="Vegetables" selected>Vegetables</option>
+                  <option value="Fruits">Fruits</option>
+                  <option value="Dairy">Dairy</option>
+                  <option value="Meat & Poultry">Meat & Poultry</option>
+                  <option value="Seafood">Seafood</option>
+                  <option value="Bakery">Bakery</option>
+                  <option value="Cooked Leftovers">Cooked Leftovers</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Storage Location</label>
+                <select class="custom-select" id="spoil-storage-type">
+                  <option value="Fridge" selected>Refrigerator (Cold)</option>
+                  <option value="Pantry">Pantry (Ambient)</option>
+                  <option value="Freezer">Freezer (Sub-zero)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Temperature Slider -->
+            <div class="slider-group">
+              <div class="slider-header">
+                <span style="color: #cbd5e1;"><i class="fas fa-temperature-half" style="color: #06b6d4;"></i> Temperature (°C)</span>
+                <span class="slider-val" id="val-spoil-temp">4.0 °C</span>
+              </div>
+              <input type="range" class="custom-range" id="spoil-temp" min="-25" max="40" step="0.5" value="4.0">
+            </div>
+
+            <!-- Humidity Slider -->
+            <div class="slider-group">
+              <div class="slider-header">
+                <span style="color: #cbd5e1;"><i class="fas fa-droplet" style="color: #38bdf8;"></i> Relative Humidity (%)</span>
+                <span class="slider-val" id="val-spoil-humidity">80 %</span>
+              </div>
+              <input type="range" class="custom-range" id="spoil-humidity" min="20" max="100" step="1" value="80">
+            </div>
+
+            <!-- Days Stored Slider -->
+            <div class="slider-group">
+              <div class="slider-header">
+                <span style="color: #cbd5e1;"><i class="fas fa-clock-rotate-left" style="color: #f59e0b;"></i> Storage Duration (Days)</span>
+                <span class="slider-val" id="val-spoil-days">2.0 Days</span>
+              </div>
+              <input type="range" class="custom-range" id="spoil-days" min="0.1" max="30" step="0.5" value="2.0">
+            </div>
+
+            <!-- Ethylene Gas Slider -->
+            <div class="slider-group">
+              <div class="slider-header">
+                <span style="color: #cbd5e1;"><i class="fas fa-wind" style="color: #10b981;"></i> Ethylene Gas (ppm)</span>
+                <span class="slider-val" id="val-spoil-ethylene">0.10 ppm</span>
+              </div>
+              <input type="range" class="custom-range" id="spoil-ethylene" min="0.01" max="4.0" step="0.05" value="0.10">
+            </div>
+          </div>
+
+          <!-- Spoilage Risk Gauge & Output -->
+          <div class="glass-panel" style="display: flex; flex-direction: column;">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-gauge-high"></i>
+                XGBoost Spoilage Prediction
+              </div>
+              <span class="badge good">Live Inference</span>
+            </div>
+
+            <div class="risk-gauge-box">
+              <div class="gauge-circle" id="gauge-circle">
+                <span class="gauge-pct" id="gauge-spoil-pct">12%</span>
+                <span class="gauge-sub">Spoilage Risk</span>
+              </div>
+              <span class="badge good" id="spoil-risk-level" style="font-size: 0.9rem; padding: 0.35rem 1rem;">Low Risk (Fresh)</span>
+              
+              <div style="font-size: 0.88rem; color: #cbd5e1; margin-top: 0.75rem;">
+                Estimated Shelf Life Remaining: <strong id="spoil-remaining-days" style="color: #34d399; font-family: monospace;">5.5 Days</strong>
+              </div>
+            </div>
+
+            <!-- Action Advice -->
+            <div style="background: rgba(15,23,42,0.85); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; margin-top: 1rem;">
+              <div style="font-size: 0.75rem; color: #10b981; font-weight: 700; text-transform: uppercase;">Preventive Action Plan</div>
+              <div id="spoil-advice" style="font-size: 0.88rem; color: #e2e8f0; margin-top: 0.25rem;">
+                Safe and fresh! Maintain stable temperature.
+              </div>
+            </div>
+
+            <!-- Explainability Attribution -->
+            <div style="margin-top: 1rem; flex: 1;">
+              <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin-bottom: 0.35rem;">Explainable AI Factor Attribution</div>
+              <ul id="spoil-factors-list" style="list-style: none; padding: 0;">
+                <li style="font-size: 0.85rem; color: #cbd5e1;">✅ Sensor metrics within ideal preservation boundaries.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PAGE 4: SMART INVENTORY ================= -->
+      <section class="page-view" id="view-inventory">
+        <div class="glass-panel">
+          
+          <!-- Inventory Controls Bar -->
+          <div class="filter-bar">
+            <div class="filter-pills">
+              <button class="pill-btn inv-filter-btn active" data-filter="all">All Items</button>
+              <button class="pill-btn inv-filter-btn" data-filter="Fridge">❄️ Fridge</button>
+              <button class="pill-btn inv-filter-btn" data-filter="Pantry">📦 Pantry</button>
+              <button class="pill-btn inv-filter-btn" data-filter="Freezer">🧊 Freezer</button>
+              <button class="pill-btn inv-filter-btn" data-filter="expiring">⚠️ Expiring Soon</button>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              <div style="position: relative;">
+                <input type="text" class="custom-input" id="inv-search-input" placeholder="Search inventory..." style="padding-left: 2rem; width: 220px;">
+                <i class="fas fa-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 0.8rem;"></i>
+              </div>
+              <button class="action-btn btn-primary" id="btn-add-inventory-modal-direct" onclick="document.getElementById('add-item-modal').classList.add('active')">
+                <i class="fas fa-plus"></i> Add Item
+              </button>
+            </div>
+          </div>
+
+          <!-- Inventory Table -->
+          <div style="overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Food Item</th>
+                  <th>Category</th>
+                  <th>Storage</th>
+                  <th>Expiry Date</th>
+                  <th>XGBoost Spoilage Risk</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-table-body">
+                <!-- Dynamically Populated by inventory.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PAGE 5: ZERO-WASTE RECIPES ================= -->
+      <section class="page-view" id="view-recipes">
+        
+        <div class="glass-panel" style="background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(245,158,11,0.08)); border-color: rgba(16,185,129,0.25); margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <span class="badge good">Research Objective 05 • Personalized Suggestions</span>
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: #fff; margin-top: 0.25rem;">Smart Zero-Waste Recipe Matcher</h3>
+              <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0.2rem;">
+                Recipes dynamically ranked by currently expiring ingredients in your smart inventory (Spinach, Milk, Strawberries).
+              </p>
+            </div>
+            <button class="action-btn btn-secondary" onclick="RecipesModule.loadRecipes()">
+              <i class="fas fa-rotate"></i> Refresh Matches
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-3" id="recipes-grid">
+          <!-- Dynamically Populated by recipes.js -->
+        </div>
+      </section>
+
+      <!-- ================= PAGE 6: OPEN FOOD FACTS & BARCODE ================= -->
+      <section class="page-view" id="view-openfoodfacts">
+        <div class="grid-2">
+          
+          <!-- Search & Barcode Input Column -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-barcode"></i>
+                Barcode & Product Database Lookup
+              </div>
+              <span class="badge good">Open Food Facts API</span>
+            </div>
+
+            <!-- Barcode Lookup -->
+            <div style="margin-bottom: 1.5rem;">
+              <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Enter Barcode (EAN / UPC)</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" class="custom-input" id="off-barcode-input" placeholder="e.g. 3017620422003 (Nutella)">
+                <button class="action-btn btn-primary" id="btn-off-barcode-lookup">
+                  <i class="fas fa-search"></i> Lookup
+                </button>
+              </div>
+              
+              <!-- Sample Barcode Chips -->
+              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.65rem;">
+                <span style="font-size: 0.72rem; color: #64748b; align-self: center;">Try:</span>
+                <button class="pill-btn" data-sample-barcode="3017620422003">Nutella</button>
+                <button class="pill-btn" data-sample-barcode="5449000000996">Coca-Cola</button>
+                <button class="pill-btn" data-sample-barcode="7622210449283">Oreo</button>
+                <button class="pill-btn" data-sample-barcode="8076800195057">Barilla Pasta</button>
+                <button class="pill-btn" data-sample-barcode="7311070005706">Oat Milk</button>
+              </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-glass); margin: 1.5rem 0;">
+
+            <!-- Product Keyword Search -->
+            <div>
+              <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Search Food Items by Keyword</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" class="custom-input" id="off-search-input" placeholder="e.g. Greek Yogurt, Oats, Tomato sauce...">
+                <button class="action-btn btn-secondary" id="btn-off-search">
+                  <i class="fas fa-magnifying-glass"></i> Search
+                </button>
+              </div>
+            </div>
+
+            <!-- Search Results Container -->
+            <div id="off-search-results-list" style="margin-top: 1.25rem; max-height: 300px; overflow-y: auto;"></div>
+          </div>
+
+          <!-- Product Details Card -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-circle-info"></i>
+                Metadata & Packaging Intelligence
+              </div>
+            </div>
+
+            <div id="off-loading" style="display: none; text-align: center; padding: 3rem;">
+              <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #10b981; margin-bottom: 0.75rem;"></i>
+              <div style="color: #fff; font-weight: 600;">Querying Open Food Facts API...</div>
+            </div>
+
+            <div id="off-product-details" style="display: none;">
+              <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem;">
+                <img id="off-prod-img" src="" style="width: 72px; height: 72px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border-glass);" alt="Product">
+                <div>
+                  <h3 id="off-prod-name" style="font-size: 1.25rem; font-weight: 700; color: #fff;">Product Name</h3>
+                  <div id="off-prod-brand" style="font-size: 0.82rem; color: #94a3b8;">Brand</div>
+                  <div id="off-prod-code" style="font-size: 0.75rem; color: #64748b; font-family: monospace;">Barcode: 000000000000</div>
+                </div>
+              </div>
+
+              <!-- Eco & Nutri Score Badges -->
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;">
+                <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); border-radius: 8px; padding: 0.6rem; text-align: center;">
+                  <div style="font-size: 0.7rem; color: #10b981;">Nutri-Score</div>
+                  <div id="off-prod-nutriscore" style="font-size: 1.2rem; font-weight: 800; color: #fff;">A</div>
+                </div>
+                <div style="background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.25); border-radius: 8px; padding: 0.6rem; text-align: center;">
+                  <div style="font-size: 0.7rem; color: #06b6d4;">Eco-Score</div>
+                  <div id="off-prod-ecoscore" style="font-size: 1.2rem; font-weight: 800; color: #fff;">B</div>
+                </div>
+                <div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 8px; padding: 0.6rem; text-align: center;">
+                  <div style="font-size: 0.7rem; color: #f59e0b;">Calories</div>
+                  <div id="off-prod-calories" style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-top: 4px;">450 kcal</div>
+                </div>
+              </div>
+
+              <!-- Metadata List -->
+              <div style="font-size: 0.85rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <div><strong>📦 Packaging:</strong> <span id="off-prod-packaging">Plastic / Cardboard</span></div>
+                <div><strong>🌡️ Storage:</strong> <span id="off-prod-storage">Store in cool dry place</span></div>
+                <div><strong>⏳ Shelf Life:</strong> <span id="off-prod-shelflife" style="color: #34d399;">7 Days once opened</span></div>
+                <div><strong>🧪 Key Ingredients:</strong> <span id="off-prod-ingredients" style="color: #94a3b8; font-size: 0.8rem;">Sugar, flour, etc.</span></div>
+              </div>
+
+              <button class="action-btn btn-primary" id="btn-off-add-inventory" style="width: 100%; justify-content: center;">
+                <i class="fas fa-plus"></i> Import Product into Smart Inventory
+              </button>
+            </div>
+
+            <div id="off-empty-state" style="text-align: center; padding: 3rem; color: #64748b;">
+              <i class="fas fa-barcode" style="font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.3;"></i>
+              <div>Enter a barcode or product search above to fetch real-time Open Food Facts data.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PAGE 7: COMMUNITY RESCUE ================= -->
+      <section class="page-view" id="view-community">
+        <div class="glass-panel" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(6,182,212,0.12), rgba(99,102,241,0.08)); border-color: rgba(6,182,212,0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <span class="badge cyan">Future Scope & Community Impact</span>
+              <h3 style="font-size: 1.3rem; font-weight: 700; color: #fff; margin-top: 0.25rem;">Community Surplus Food Rescue Board</h3>
+              <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0.2rem;">
+                Connect surplus edible food from university cafeterias, restaurants, and households directly with nearby food shelters.
+              </p>
+            </div>
+            <button class="action-btn btn-primary" id="btn-open-community-modal">
+              <i class="fas fa-plus"></i> Post Surplus Food
+            </button>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;" id="community-posts-list">
+          <!-- Dynamically Populated by recipes.js -->
+        </div>
+      </section>
+
+      <!-- ================= PAGE 8: WASTE ANALYTICS ================= -->
+      <section class="page-view" id="view-analytics">
+        
+        <!-- Summary Stat Cards -->
+        <div class="grid-4" style="margin-bottom: 1.5rem;">
+          <div class="stat-card">
+            <div class="stat-icon emerald"><i class="fas fa-leaf"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="kpi-food-saved">48.6 kg</div>
+              <div class="stat-label">Food Waste Diverted</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon cyan"><i class="fas fa-wallet"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="kpi-money-saved">$342.50</div>
+              <div class="stat-label">Household Savings</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon indigo"><i class="fas fa-cloud-arrow-down"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="kpi-co2-saved">118.2 kg</div>
+              <div class="stat-label">CO₂e Emissions Prevented</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber"><i class="fas fa-bowl-food"></i></div>
+            <div class="stat-info">
+              <div class="stat-value" id="kpi-meals-rescued">84 Portions</div>
+              <div class="stat-label">Edible Meals Rescued</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="grid-2">
+          
+          <!-- Monthly Trend Chart -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-chart-line"></i>
+                6-Month Food Waste Reduction Trend
+              </div>
+            </div>
+            <div style="height: 280px; position: relative;">
+              <canvas id="waste-trend-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Category Breakdown Chart -->
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-chart-pie"></i>
+                Tracked Inventory by Category
+              </div>
+            </div>
+            <div style="height: 280px; position: relative;">
+              <canvas id="category-pie-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PAGE 9: DIU RESEARCH PROPOSAL (SLIDE DECK VIEW) ================= -->
+      <section class="page-view" id="view-research">
+        <div class="glass-panel" style="margin-bottom: 1.5rem;">
+          <div class="terminal-header" style="margin-bottom: 1rem;">
+            <div class="terminal-dot dot-red"></div>
+            <div class="terminal-dot dot-yellow"></div>
+            <div class="terminal-dot dot-green"></div>
+            <span style="font-size: 0.85rem; color: #a7f3d0; font-family: monospace; margin-left: 8px;">mehedihasan@research: ~/savefood — A Research-Based Project Proposal</span>
+          </div>
+
+          <!-- Hero Slide Presentation Card -->
+          <div style="background: rgba(2,6,23,0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem;">
+            <h1 style="font-size: 2rem; font-weight: 800; color: #10b981; letter-spacing: -0.5px;">SaveFood 🥗</h1>
+            <h2 style="font-size: 1.3rem; font-weight: 600; color: #fff; margin-top: 0.25rem;">An Intelligent Food Waste Prevention System</h2>
+            <div style="font-size: 0.9rem; color: #94a3b8; margin-top: 0.25rem;">Markup & Scripting Languages Lab (Lab 04) • Dhaka International University (DIU)</div>
+
+            <div class="grid-2" style="margin-top: 1.5rem;" id="research-student-info">
+              <!-- Dynamically Populated by app.js -->
+            </div>
+          </div>
+
+          <!-- Research Objectives Grid -->
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 1rem;">
+            <i class="fas fa-list-check" style="color: #10b981;"></i> Research Objectives & Technical Scope
+          </h3>
+          
+          <div class="grid-2" style="margin-bottom: 1.5rem;">
+            <div class="glass-panel" style="background: rgba(15,23,42,0.9); padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span class="badge good">01</span>
+                <h4 style="color: #fff; font-weight: 600;">Freshness Recognition</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: #94a3b8;">Image-based food identification via MobileNetV2 / EfficientNet trained on Food-101 dataset with color-temperature freshness indexing.</p>
+            </div>
+
+            <div class="glass-panel" style="background: rgba(15,23,42,0.9); padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span class="badge cyan">02</span>
+                <h4 style="color: #fff; font-weight: 600;">Spoilage Prediction (XGBoost)</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: #94a3b8;">XGBoost classifier trained on IoT sensor telemetry (temp, humidity, days stored, ethylene gas) achieving calibrated <strong>F1-score: 0.89</strong>.</p>
+            </div>
+
+            <div class="glass-panel" style="background: rgba(15,23,42,0.9); padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span class="badge" style="background: rgba(245,158,11,0.2); color: #f59e0b;">03</span>
+                <h4 style="color: #fff; font-weight: 600;">Open Food Facts Metadata</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: #94a3b8;">Real-time API & barcode integration for packaging recyclability, Nutri-Score, Eco-Score, and expiry heuristics.</p>
+            </div>
+
+            <div class="glass-panel" style="background: rgba(15,23,42,0.9); padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span class="badge" style="background: rgba(99,102,241,0.2); color: #818cf8;">04</span>
+                <h4 style="color: #fff; font-weight: 600;">Waste Analytics Dashboard</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: #94a3b8;">Dynamic visualization of food saved (kg), financial savings ($), and carbon footprint reductions aligned with UN SDG 12.3.</p>
+            </div>
+          </div>
+
+          <!-- Model Validation Metrics Box -->
+          <div class="glass-panel" style="background: rgba(15,23,42,0.95); border-color: rgba(16,185,129,0.3);">
+            <div class="panel-header">
+              <div class="panel-title">
+                <i class="fas fa-square-poll-vertical"></i>
+                Model Performance & Validation Metrics
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <a href="/download/docx" class="action-btn btn-secondary" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; text-decoration: none;">
+                  <i class="fas fa-file-word"></i> Download Word (.docx)
+                </a>
+                <a href="/download/pdf" class="action-btn btn-primary" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; text-decoration: none;">
+                  <i class="fas fa-file-pdf"></i> Download PDF (.pdf)
+                </a>
+              </div>
+            </div>
+            <div id="research-model-metrics">
+              <!-- Dynamically Populated by app.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Add Item Modal -->
+  <div class="modal-backdrop" id="add-item-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;"><i class="fas fa-plus-circle" style="color: #10b981;"></i> Add Food to Inventory</h3>
+        <button class="modal-close" id="add-item-modal-close">&times;</button>
+      </div>
+      <form id="add-item-form">
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Food Name *</label>
+          <input type="text" class="custom-input" id="add-name" placeholder="e.g. Sliced Sourdough Bread" required>
+        </div>
+        <div class="grid-2" style="margin-bottom: 1rem;">
+          <div>
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Category</label>
+            <select class="custom-select" id="add-category">
+              <option value="Vegetables">Vegetables</option>
+              <option value="Fruits">Fruits</option>
+              <option value="Dairy">Dairy</option>
+              <option value="Meat & Poultry">Meat & Poultry</option>
+              <option value="Seafood">Seafood</option>
+              <option value="Bakery">Bakery</option>
+              <option value="Cooked Leftovers">Cooked Leftovers</option>
+              <option value="Pantry & Grains">Pantry & Grains</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Storage Location</label>
+            <select class="custom-select" id="add-storage">
+              <option value="Fridge">Fridge</option>
+              <option value="Pantry">Pantry</option>
+              <option value="Freezer">Freezer</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2" style="margin-bottom: 1.5rem;">
+          <div>
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Quantity</label>
+            <input type="text" class="custom-input" id="add-quantity" placeholder="e.g. 500g / 1 pack">
+          </div>
+          <div>
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Estimated Cost ($)</label>
+            <input type="number" step="0.5" class="custom-input" id="add-cost" value="4.00">
+          </div>
+        </div>
+        <button type="submit" class="action-btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
+          <i class="fas fa-floppy-disk"></i> Save to Smart Inventory
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Recipe Detail Modal -->
+  <div class="modal-backdrop" id="recipe-detail-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="recipe-modal-title" style="font-size: 1.3rem; font-weight: 700; color: #fff;">Recipe Name</h3>
+        <button class="modal-close" id="recipe-detail-modal-close">&times;</button>
+      </div>
+      <p id="recipe-modal-desc" style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 1.25rem;">Description</p>
+      
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: #10b981; margin-bottom: 0.5rem;">Ingredients:</h4>
+        <ul id="recipe-modal-ingredients" style="list-style: none; padding: 0; font-size: 0.85rem;"></ul>
+      </div>
+
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: #10b981; margin-bottom: 0.5rem;">Step-by-Step Instructions:</h4>
+        <ol id="recipe-modal-steps" style="padding-left: 1.25rem; font-size: 0.85rem;"></ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Community Post Modal -->
+  <div class="modal-backdrop" id="community-post-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; font-weight: 700; color: #fff;"><i class="fas fa-hand-holding-heart" style="color: #06b6d4;"></i> Post Surplus Food to Community</h3>
+        <button class="modal-close" id="community-modal-close">&times;</button>
+      </div>
+      <form id="community-post-form">
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Item Title *</label>
+          <input type="text" class="custom-input" id="post-title" placeholder="e.g. 5 Portions of Freshly Cooked Rice & Curry" required>
+        </div>
+        <div class="grid-2" style="margin-bottom: 1rem;">
+          <div>
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Donor / Organization</label>
+            <input type="text" class="custom-input" id="post-donor" placeholder="e.g. DIU CSE Cafeteria">
+          </div>
+          <div>
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Location</label>
+            <input type="text" class="custom-input" id="post-location" placeholder="e.g. Mirpur, Dhaka">
+          </div>
+        </div>
+        <div class="grid-2" style="margin-bottom: 1.5rem;">
+          <div>
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Quantity *</label>
+            <input type="text" class="custom-input" id="post-quantity" placeholder="e.g. 5 boxes (2 kg)" required>
+          </div>
+          <div>
+            <label style="font-size: 0.82rem; color: #94a3b8; font-weight: 600; margin-bottom: 0.35rem; display: block;">Contact Info</label>
+            <input type="text" class="custom-input" id="post-contact" placeholder="e.g. +880 1712 345678">
+          </div>
+        </div>
+        <button type="submit" class="action-btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
+          <i class="fas fa-paper-plane"></i> Publish Surplus Food Listing
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/spoilage.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/inventory.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/recipes.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/openfoodfacts.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
